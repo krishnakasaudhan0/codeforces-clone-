@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+ 
+}
+
+model User {
+  id          String       @id @default(uuid())
+  name        String
+  submissions Submission[]
+}
+
+model Problem {
+  id          String        @id @default(uuid())
+  title       String        @unique
+  description String
+  submissions Submission[]
+  defaultCode DefaultCode[]
+  createdAt   DateTime      @default(now())
+}
+
+model DefaultCode {
+  id        String   @id @default(uuid())
+  language  Language
+  code      String
+
+  problemId String
+  problem   Problem  @relation(fields: [problemId], references: [id])
+}
+
+model Submission {
+  id         String     @id @default(uuid())
+  problemId  String
+  code       String
+  language   Language
+  userId     String
+  status     Status
+
+  user       User       @relation(fields: [userId], references: [id])
+  problem    Problem    @relation(fields: [problemId], references: [id])
+  testCases  TestCase[]
+
+  createdAt  DateTime   @default(now())
+}
+
+model TestCase {
+  id           String         @id @default(uuid())
+  submissionId String
+  status       TestCaseStatus
+  time         Int
+  memory       Int
+
+  submission   Submission     @relation(fields: [submissionId], references: [id])
+}
+
+enum Status {
+  PENDING
+  ACCEPTED
+  WRONG_ANSWER
+  RUNTIME_ERROR
+  TIME_LIMIT_EXCEEDED
+  COMPILATION_ERROR
+}
+
+enum TestCaseStatus {
+  PASSED
+  FAILED
+}
+
+enum Language {
+  CPP
+  JAVA
+  PYTHON
+  JAVASCRIPT
+  TYPESCRIPT
+}

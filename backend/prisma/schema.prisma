@@ -5,12 +5,14 @@ generator client {
 
 datasource db {
   provider = "postgresql"
- 
 }
 
 model User {
   id          String       @id @default(uuid())
   name        String
+  username    String       @unique
+  email       String       @unique
+  password    String
   submissions Submission[]
 }
 
@@ -24,27 +26,27 @@ model Problem {
 }
 
 model DefaultCode {
-  id        String   @id @default(uuid())
-  language  Language
-  code      String
+  id       String   @id @default(uuid())
+  language Language
+  code     String
 
   problemId String
-  problem   Problem  @relation(fields: [problemId], references: [id])
+  problem   Problem @relation(fields: [problemId], references: [id])
 }
 
 model Submission {
-  id         String     @id @default(uuid())
-  problemId  String
-  code       String
-  language   Language
-  userId     String
-  status     Status
+  id        String   @id @default(uuid())
+  problemId String
+  code      String
+  language  Language
+  userId    String
+  status    Status
 
-  user       User       @relation(fields: [userId], references: [id])
-  problem    Problem    @relation(fields: [problemId], references: [id])
-  testCases  TestCase[]
+  user      User       @relation(fields: [userId], references: [id])
+  problem   Problem    @relation(fields: [problemId], references: [id])
+  testCases TestCase[]
 
-  createdAt  DateTime   @default(now())
+  createdAt DateTime @default(now())
 }
 
 model TestCase {
@@ -54,7 +56,7 @@ model TestCase {
   time         Int
   memory       Int
 
-  submission   Submission     @relation(fields: [submissionId], references: [id])
+  submission Submission @relation(fields: [submissionId], references: [id])
 }
 
 enum Status {

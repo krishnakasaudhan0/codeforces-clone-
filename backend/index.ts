@@ -11,12 +11,16 @@ const prisma = new PrismaClient({
 
 import express from 'express'
 import jwt from 'jsonwebtoken'
+import bcrypt from 'bcrypt'
+
 
 
 const app=express();
 
 app.post('/register',async (req,res)=>{
    const {email,password}=req.body;
+   
+    
    
 
 })
